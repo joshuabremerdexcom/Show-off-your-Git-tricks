@@ -196,3 +196,47 @@ Continuing in 2.0 seconds, assuming that you meant 'st'.## branch1
 ## Optimize Git commands
 
 Git alias is a useful feature that improves your efficiency by optimizing the execution of common and repetitive commands. Git allows you to define as many aliases as you want, and some users define many. I prefer to define aliases for just my most used commands—defining too many makes it harder to memorize them and may require me to look them up to use them.
+
+## Git Rebase and Force Pushing
+
+When working on your own feature branches it can be useful to rebase to:
+  * keep the commit history clean
+  * support cherry-picking after a reset
+  * use interactive mode to
+    * combine/reorder/delete commits
+    * edit commit messages
+
+After a rebase and branch that has been pushed will need to be force pushed.  A safe way to do that is with the `--force-with-lease` option.  This will make sure you don't overwrite any unexpected commits.  An alias makes this easy:
+
+```
+git config --global alias.please 'push --force-with-lease'
+```
+
+To use interactive rebase, decide how many commits back you want to go, for example:
+
+```
+git rebase -i HEAD~3
+```
+
+Then edit the `pick` prefix on the line before selected commits to 1 of the supported commands.  I use `r`, `s`, and `f` the most.
+
+```
+# Commands:
+# p, pick <commit> = use commit
+# r, reword <commit> = use commit, but edit the commit message
+# e, edit <commit> = use commit, but stop for amending
+# s, squash <commit> = use commit, but meld into previous commit
+# f, fixup [-C | -c] <commit> = like "squash" but keep only the previous
+#                    commit's log message, unless -C is used, in which case
+#                    keep only this commit's message; -c is same as -C but
+#                    opens the editor
+# x, exec <command> = run command (the rest of the line) using shell
+# b, break = stop here (continue rebase later with 'git rebase --continue')
+# d, drop <commit> = remove commit
+# l, label <label> = label current HEAD with a name
+# t, reset <label> = reset HEAD to a label
+# m, merge [-C <commit> | -c <commit>] <label> [# <oneline>]
+# .       create a merge commit using the original merge commit's
+# .       message (or the oneline, if no original merge commit was
+# .       specified); use -c <commit> to reword the commit message
+```
